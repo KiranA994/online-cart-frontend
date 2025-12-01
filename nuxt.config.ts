@@ -9,7 +9,7 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: false },
-  modules: ['@nuxtjs/tailwindcss', '@vueform/nuxt', '@nuxtjs/google-fonts','@pinia/nuxt',],
+  modules: ['@nuxtjs/tailwindcss', '@vueform/nuxt', '@nuxtjs/google-fonts','@pinia/nuxt','nuxt-toast'],
   // @ts-expect-error: googleFonts config is provided by @nuxtjs/google-fonts module
   googleFonts: {
     families: {

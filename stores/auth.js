@@ -9,21 +9,13 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   actions: {
-    async register(name, email, password, role = 'user') {
-      await axios.post('http://localhost:5000/api/auth/register', {
-        name,
-        email,
-        password,
-        role
-      })
+    async register(data) {
+      await axios.post('http://localhost:5000/api/auth/register', {...data,role: 'user'});
     },
 
-    async login(email, password) {
-      const { data } = await axios.post('http://localhost:5000/api/auth/login', {
-        email,
-        password
-      })
-
+    async login(payload) {
+      const { data } = await axios.post('http://localhost:5000/api/auth/login', payload);
+      
       this.accessToken = data.accessToken
       this.refreshToken = data.refreshToken
 
