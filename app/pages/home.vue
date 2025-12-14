@@ -38,6 +38,11 @@ import { VueperSlides, VueperSlide } from 'vueperslides'
 import 'vueperslides/dist/vueperslides.css'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faBookmark } from '@fortawesome/free-regular-svg-icons'
+
+definePageMeta({
+  role: ['user']
+})
+
 const slides = [
    {
     id: 1,

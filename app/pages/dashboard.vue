@@ -117,12 +117,17 @@
 </template>
 
 <script setup>
+
 import { ref } from 'vue';
 import dollar from '@/assets/icons/dollar.svg';
 import cart from '@/assets/icons/cart.svg';
 import users from '@/assets/icons/users.svg';
 import market from '@/assets/icons/market.svg';
 import LineChart from '@/app/components/LineChart.vue'
+
+definePageMeta({
+  role: ['admin']
+})
 
 const options = ["Today", "Week", "Month", "Year"];
 

@@ -27,8 +27,4 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
   }
 
-  // Role-based access
-  if (to.meta.role && !to.meta.role.includes(auth.user.role)) {
-    return navigateTo('/forbidden')
-  }
 })

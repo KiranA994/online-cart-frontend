@@ -4,15 +4,15 @@ import { useAuthStore } from '~/stores/auth'
 export default defineNuxtPlugin(() => {
   const auth = useAuthStore()
 
-  axios.interceptors.request.use(async (config) => {
+  axios.interceptors.request.use((config) => {
+  const auth = useAuthStore();
 
-    if (!auth.accessToken) {
-      auth.loadFromStorage()
-    }
+  if (auth.accessToken && !config.url.includes('/auth')) {
+    config.headers.Authorization = `Bearer ${auth.accessToken}`;
+  }
 
-    config.headers.Authorization = `Bearer ${auth.accessToken}`
-    return config
-  })
+  return config;
+});
 
   axios.interceptors.response.use(
     res => res,

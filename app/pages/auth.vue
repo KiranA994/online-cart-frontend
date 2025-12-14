@@ -85,24 +85,79 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useAuthStore } from "~/stores/auth";
+import { toast, type ToastOptions } from 'vue3-toastify';
+import { ref } from "vue";
 
+const showPassword = ref(false)
 const auth = useAuthStore();
 const isLogin = ref(true);
-const form$ = ref(null);
 const formData = ref({});
+const form$ = ref<any>(null);
+
 const handleSubmit = async () => {
-  if(formData.value.name){
-    await auth.register(formData.value);
-    navigateTo("/auth");
-    formData.value = {};
-    return;
+  try {
+    // REGISTER
+    if (!isLogin.value) {
+      await auth.register(formData.value);
+
+      toast.success('Registration successful. Please login.', {
+        autoClose: 2500,
+        position: toast.POSITION.TOP_RIGHT,
+      } as ToastOptions);
+
+      form$.value?.reset();
+      isLogin.value = true;
+
+      return;
+    }
+
+    // LOGIN
+    await auth.login(formData.value);
+
+     toast.success('Login successful.', {
+        autoClose: 2500,
+        position: toast.POSITION.TOP_RIGHT,
+      } as ToastOptions);
+
+    form$.value?.reset();
+
+    auth.isAdmin
+      ? navigateTo('/dashboard')
+      : navigateTo('/home');
+
+  } catch (error: any) {
+    if (error.response) {
+      const status = error.response.status;
+      const message = error.response.data?.message;
+
+      if (status === 401 || status === 403) {
+        toast.error('Session expired. Please login again', {
+          autoClose: 2500,
+          position: toast.POSITION.TOP_RIGHT,
+        } as ToastOptions);
+        auth.logout();
+      } else if (status === 400) {
+        toast.error(message || 'Invalid credentials', {
+          autoClose: 2500,
+          position: toast.POSITION.TOP_RIGHT,
+        } as ToastOptions);
+      } else {
+        toast.error('Something went wrong', {
+          autoClose: 2500,
+          position: toast.POSITION.TOP_RIGHT,
+        } as ToastOptions);
+      }
+    } else {
+      toast.error(error.message || 'Unexpected error', {
+        autoClose: 2500,
+        position: toast.POSITION.TOP_RIGHT,
+      } as ToastOptions);
+    }
   }
-  await auth.login(formData.value);
-  formData.value = {};
-  navigateTo("/dashboard");
 };
+
 const toggleMode = () => {
   isLogin.value = !isLogin.value;
   formData.value = {};

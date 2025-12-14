@@ -8,6 +8,11 @@ export const useAuthStore = defineStore('auth', {
     user: null,   // includes role
   }),
 
+  getters: {
+    isAuthenticated: (state) => !!state.accessToken,
+    isAdmin: (state) => state.user?.role === 'admin'
+  },
+
   actions: {
     async register(data) {
       await axios.post('http://localhost:5000/api/auth/register', {...data,role: 'user'});
@@ -66,11 +71,6 @@ export const useAuthStore = defineStore('auth', {
       this.accessToken = localStorage.getItem('accessToken')
       this.refreshToken = localStorage.getItem('refreshToken')
     },
-
-    getters: {
-      isAuthenticated: (state) => !!state.token,
-      isAdmin: (state) => state.user?.role === 'admin'
-    }
     
   }
 })
